@@ -1,12 +1,13 @@
-import { Component, signal } from '@angular/core';
-import { RouterOutlet } from '@angular/router';
+import { Component } from '@angular/core';
+import { HomeComponent } from './components/home/home';
 
 @Component({
   selector: 'app-root',
-  imports: [RouterOutlet],
-  templateUrl: './app.html',
-  styleUrl: './app.css'
+  standalone: true,
+  imports: [HomeComponent], // Removed RouterOutlet from here
+  templateUrl: './app.html', // Ensure this points to your app.html
+  styleUrls: ['./app.css']
 })
-export class App {
-  protected readonly title = signal('cert-verifier');
+export class AppComponent {
+  title = 'cert-verifier';
 }

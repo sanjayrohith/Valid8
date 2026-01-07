@@ -1,0 +1,16 @@
+<div class="container">
+  <h1>🎓 Certificate Verifier</h1>
+
+  @if (!userAddress) {
+    <div>
+      <p>Connect your wallet to view or verify certificates.</p>
+      <button (click)="connect()">Connect Wallet</button>
+    </div>
+  }
+
+  @if (userAddress) {
+    <div>
+      <p>✅ Connected as: {{ userAddress }}</p>
+    </div>
+  }
+</div>
