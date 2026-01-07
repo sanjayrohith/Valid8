@@ -1,0 +1,71 @@
+/* The Main Container with a dark crypto-style gradient */
+.hero-container {
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: linear-gradient(135deg, #0f172a 0%, #1e1b4b 50%, #312e81 100%);
+  font-family: 'Poppins', sans-serif;
+  color: white;
+}
+
+/* The Glass Card */
+.glass-card {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 20px;
+  padding: 3rem;
+  text-align: center;
+  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  max-width: 500px;
+  width: 90%;
+}
+
+h1 {
+  font-size: 3rem;
+  margin-bottom: 0.5rem;
+  background: linear-gradient(to right, #4ade80, #3b82f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  font-weight: 700;
+}
+
+.subtitle {
+  color: #94a3b8;
+  margin-bottom: 2rem;
+  font-size: 1.1rem;
+}
+
+/* The Glowing Button */
+.connect-btn {
+  background: linear-gradient(90deg, #3b82f6, #8b5cf6);
+  border: none;
+  padding: 15px 30px;
+  color: white;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+  box-shadow: 0 0 15px rgba(59, 130, 246, 0.5);
+}
+
+.connect-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 0 25px rgba(139, 92, 246, 0.7);
+}
+
+/* Connected State Styling */
+.wallet-badge {
+  background: rgba(45, 212, 191, 0.1);
+  color: #2dd4bf;
+  padding: 10px 20px;
+  border-radius: 30px;
+  border: 1px solid rgba(45, 212, 191, 0.3);
+  display: inline-block;
+  margin-top: 1rem;
+  font-family: monospace;
+}
