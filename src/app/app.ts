@@ -1,13 +1,14 @@
 import { Component } from '@angular/core';
-import { HomeComponent } from './components/home/home';
+import { RouterOutlet } from '@angular/router';
+import { NavbarComponent } from './components/navbar/navbar';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  imports: [HomeComponent], // Removed RouterOutlet from here
-  templateUrl: './app.html', // Ensure this points to your app.html
+  imports: [RouterOutlet, NavbarComponent],
+  templateUrl: './app.html',
   styleUrls: ['./app.css']
 })
 export class AppComponent {
-  title = 'cert-verifier';
+  title = 'Vali8';
 }

@@ -1,0 +1,176 @@
+<div class="dashboard-container">
+  <div class="container">
+    
+    <!-- Page Header -->
+    <header class="dashboard-header animate-fade-in">
+      <div class="header-content">
+        <h1 class="page-title">
+          <span class="gradient-text">My Certificates</span>
+        </h1>
+        <p class="page-subtitle">View and manage your blockchain-verified academic credentials</p>
+      </div>
+      
+      @if (isConnected) {
+        <div class="wallet-info">
+          <div class="wallet-badge">
+            <span class="status-dot"></span>
+            <span>{{ truncatedAddress }}</span>
+          </div>
+        </div>
+      }
+    </header>
+
+    <!-- Not Connected State -->
+    @if (!isConnected) {
+      <div class="connect-prompt glass-card animate-fade-in">
+        <div class="prompt-icon">🔐</div>
+        <h2>Connect Your Wallet</h2>
+        <p>To view your certificates, please connect your MetaMask wallet.</p>
+        <button class="btn btn-primary btn-lg" (click)="connectWallet()" [disabled]="isLoading">
+          @if (isLoading) {
+            <span class="spinner"></span>
+            Connecting...
+          } @else {
+            <i class="fas fa-wallet"></i>
+            Connect Wallet
+          }
+        </button>
+      </div>
+    }
+
+    <!-- Loading State -->
+    @if (isConnected && isLoading) {
+      <div class="loading-state">
+        <div class="grid grid-3">
+          @for (i of [1, 2, 3]; track i) {
+            <div class="skeleton-card glass-card">
+              <div class="skeleton skeleton-image"></div>
+              <div class="skeleton skeleton-title"></div>
+              <div class="skeleton skeleton-text"></div>
+              <div class="skeleton skeleton-text short"></div>
+            </div>
+          }
+        </div>
+      </div>
+    }
+
+    <!-- Stats Section -->
+    @if (isConnected && !isLoading && certificates.length > 0) {
+      <div class="stats-section animate-fade-in">
+        <div class="grid grid-4">
+          <div class="glass-card stat-card glass-card-hover">
+            <div class="stat-icon stat-icon-blue">
+              <i class="fas fa-certificate"></i>
+            </div>
+            <div class="stat-value gradient-text">{{ certificates.length }}</div>
+            <div class="stat-label">Total Certificates</div>
+          </div>
+          <div class="glass-card stat-card glass-card-hover">
+            <div class="stat-icon stat-icon-green">
+              <i class="fas fa-check-circle"></i>
+            </div>
+            <div class="stat-value gradient-text">{{ certificates.length }}</div>
+            <div class="stat-label">Verified</div>
+          </div>
+          <div class="glass-card stat-card glass-card-hover">
+            <div class="stat-icon stat-icon-purple">
+              <i class="fas fa-university"></i>
+            </div>
+            <div class="stat-value gradient-text">3</div>
+            <div class="stat-label">Institutions</div>
+          </div>
+          <div class="glass-card stat-card glass-card-hover">
+            <div class="stat-icon stat-icon-teal">
+              <i class="fas fa-link"></i>
+            </div>
+            <div class="stat-value gradient-text">ETH</div>
+            <div class="stat-label">Blockchain</div>
+          </div>
+        </div>
+      </div>
+    }
+
+    <!-- Certificates Grid -->
+    @if (isConnected && !isLoading) {
+      @if (certificates.length > 0) {
+        <section class="certificates-section">
+          <div class="section-header">
+            <h2>Your Credentials</h2>
+            <span class="badge badge-success">
+              <i class="fas fa-shield-alt"></i>
+              All Verified
+            </span>
+          </div>
+          
+          <div class="certificates-grid">
+            @for (cert of certificates; track cert.tokenId; let i = $index) {
+              <div class="certificate-card glass-card animate-fade-in" [style.animation-delay]="(i * 0.1) + 's'">
+                <div class="certificate-verified">
+                  <i class="fas fa-check"></i>
+                  Verified
+                </div>
+                
+                <div class="certificate-image-container">
+                  <img [src]="cert.imageUrl" [alt]="cert.degree" class="certificate-image" />
+                  <div class="certificate-overlay">
+                    <button class="btn btn-sm btn-secondary">
+                      <i class="fas fa-expand"></i>
+                      View Details
+                    </button>
+                  </div>
+                </div>
+                
+                <div class="certificate-content">
+                  <div class="certificate-badge">
+                    <i class="fas fa-graduation-cap"></i>
+                    Token #{{ cert.tokenId }}
+                  </div>
+                  
+                  <h3 class="certificate-title">{{ cert.degree }}</h3>
+                  
+                  <div class="certificate-meta">
+                    <div class="meta-item">
+                      <i class="fas fa-university"></i>
+                      <span>{{ cert.institution }}</span>
+                    </div>
+                    <div class="meta-item">
+                      <i class="fas fa-calendar"></i>
+                      <span>{{ formatDate(cert.dateIssued) }}</span>
+                    </div>
+                  </div>
+                  
+                  <div class="certificate-footer">
+                    <div class="tx-hash">
+                      <i class="fas fa-link"></i>
+                      <span class="font-mono">{{ truncateHash(cert.transactionHash) }}</span>
+                    </div>
+                    <a href="https://sepolia.etherscan.io/tx/{{ cert.transactionHash }}" 
+                       target="_blank" 
+                       class="etherscan-link">
+                      <i class="fas fa-external-link-alt"></i>
+                    </a>
+                  </div>
+                </div>
+              </div>
+            }
+          </div>
+        </section>
+      } @else {
+        <!-- Empty State -->
+        <div class="empty-state glass-card animate-fade-in">
+          <div class="empty-state-icon">🎓</div>
+          <h2 class="empty-state-title">No Certificates Yet</h2>
+          <p class="empty-state-text">
+            You don't have any NFT certificates in your wallet yet.
+            <br>Ask your institution to mint your credentials.
+          </p>
+          <a routerLink="/verify" class="btn btn-primary">
+            <i class="fas fa-search"></i>
+            Verify a Certificate
+          </a>
+        </div>
+      }
+    }
+
+  </div>
+</div>

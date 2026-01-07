@@ -1,0 +1,309 @@
+<div class="admin-container">
+  <div class="container">
+    
+    <!-- Page Header -->
+    <header class="admin-header animate-fade-in">
+      <div class="header-content">
+        <div class="header-icon">🛡️</div>
+        <h1 class="page-title">
+          <span class="gradient-text-purple">Admin Panel</span>
+        </h1>
+        <p class="page-subtitle">Mint and manage NFT certificates for verified students</p>
+      </div>
+      
+      @if (isConnected && isAdmin) {
+        <div class="admin-badge">
+          <i class="fas fa-crown"></i>
+          <span>Contract Owner</span>
+        </div>
+      }
+    </header>
+
+    <!-- Not Connected State -->
+    @if (!isConnected) {
+      <div class="connect-prompt glass-card animate-fade-in">
+        <div class="prompt-icon">🔐</div>
+        <h2>Admin Authentication Required</h2>
+        <p>Connect your wallet to access the admin panel. Only the contract owner can mint certificates.</p>
+        <button class="btn btn-primary btn-lg" (click)="connectWallet()" [disabled]="isLoading">
+          @if (isLoading) {
+            <span class="spinner"></span>
+            Connecting...
+          } @else {
+            <i class="fas fa-wallet"></i>
+            Connect Admin Wallet
+          }
+        </button>
+      </div>
+    }
+
+    <!-- Admin Content -->
+    @if (isConnected && isAdmin) {
+      <div class="admin-content">
+        
+        <div class="admin-grid">
+          
+          <!-- Mint Form -->
+          <div class="mint-section glass-card animate-fade-in">
+            <div class="section-header">
+              <h2>
+                <i class="fas fa-plus-circle"></i>
+                Mint New Certificate
+              </h2>
+              <span class="badge badge-info">NFT Minting</span>
+            </div>
+
+            <!-- Success Message -->
+            @if (mintSuccess) {
+              <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i>
+                <div>
+                  <strong>Certificate Minted Successfully!</strong>
+                  <p>The NFT has been minted and sent to the student's wallet.</p>
+                </div>
+                <button class="alert-close" (click)="mintSuccess = false">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            }
+
+            <!-- Error Message -->
+            @if (mintError) {
+              <div class="alert alert-error">
+                <i class="fas fa-exclamation-circle"></i>
+                <div>
+                  <strong>Minting Failed</strong>
+                  <p>{{ mintError }}</p>
+                </div>
+                <button class="alert-close" (click)="mintError = ''">
+                  <i class="fas fa-times"></i>
+                </button>
+              </div>
+            }
+
+            <form class="mint-form" (ngSubmit)="mintCertificate()">
+              
+              <!-- Student Details -->
+              <div class="form-section">
+                <h3>
+                  <i class="fas fa-user-graduate"></i>
+                  Student Details
+                </h3>
+                
+                <div class="form-group">
+                  <label class="form-label">Student Full Name *</label>
+                  <input 
+                    type="text" 
+                    class="input-field"
+                    [(ngModel)]="form.studentName"
+                    name="studentName"
+                    placeholder="Enter student's full name"
+                  />
+                </div>
+
+                <div class="form-group">
+                  <label class="form-label">Student Wallet Address *</label>
+                  <input 
+                    type="text" 
+                    class="input-field font-mono"
+                    [(ngModel)]="form.studentWallet"
+                    name="studentWallet"
+                    placeholder="0x..."
+                    [class.invalid]="form.studentWallet && !isValidAddress(form.studentWallet)"
+                  />
+                  @if (form.studentWallet && !isValidAddress(form.studentWallet)) {
+                    <span class="field-error">Please enter a valid Ethereum address</span>
+                  }
+                </div>
+              </div>
+
+              <!-- Certificate Details -->
+              <div class="form-section">
+                <h3>
+                  <i class="fas fa-scroll"></i>
+                  Certificate Details
+                </h3>
+                
+                <div class="form-group">
+                  <label class="form-label">Degree / Certificate Name *</label>
+                  <input 
+                    type="text" 
+                    class="input-field"
+                    [(ngModel)]="form.degree"
+                    name="degree"
+                    placeholder="e.g., Bachelor of Science in Computer Science"
+                  />
+                </div>
+
+                <div class="form-row">
+                  <div class="form-group">
+                    <label class="form-label">Issuing Institution *</label>
+                    <input 
+                      type="text" 
+                      class="input-field"
+                      [(ngModel)]="form.institution"
+                      name="institution"
+                      placeholder="e.g., MIT"
+                    />
+                  </div>
+                  
+                  <div class="form-group">
+                    <label class="form-label">Date Issued *</label>
+                    <input 
+                      type="date" 
+                      class="input-field"
+                      [(ngModel)]="form.dateIssued"
+                      name="dateIssued"
+                    />
+                  </div>
+                </div>
+              </div>
+
+              <!-- Image Upload -->
+              <div class="form-section">
+                <h3>
+                  <i class="fas fa-image"></i>
+                  Certificate Image (Optional)
+                </h3>
+                
+                <div class="upload-area" [class.has-preview]="imagePreview">
+                  @if (!imagePreview) {
+                    <label class="upload-label">
+                      <input 
+                        type="file" 
+                        accept="image/*"
+                        (change)="onFileSelected($event)"
+                        hidden
+                      />
+                      <div class="upload-content">
+                        <i class="fas fa-cloud-upload-alt"></i>
+                        <p>Click to upload or drag and drop</p>
+                        <span>PNG, JPG, GIF up to 10MB</span>
+                      </div>
+                    </label>
+                  } @else {
+                    <div class="image-preview">
+                      <img [src]="imagePreview" alt="Certificate preview" />
+                      <button type="button" class="remove-image" (click)="removeImage()">
+                        <i class="fas fa-times"></i>
+                      </button>
+                    </div>
+                  }
+                </div>
+              </div>
+
+              <!-- Submit Button -->
+              <button 
+                type="submit" 
+                class="btn btn-success btn-lg mint-btn"
+                [disabled]="isMinting || !isFormValid()">
+                @if (isMinting) {
+                  <span class="spinner"></span>
+                  <span class="minting-text">
+                    Minting Certificate...
+                  </span>
+                } @else {
+                  <i class="fas fa-gem"></i>
+                  Mint NFT Certificate
+                }
+              </button>
+
+            </form>
+          </div>
+
+          <!-- Recent Activity -->
+          <div class="activity-section">
+            
+            <!-- Stats -->
+            <div class="stats-grid animate-fade-in">
+              <div class="glass-card stat-mini">
+                <div class="stat-mini-icon stat-icon-green">
+                  <i class="fas fa-certificate"></i>
+                </div>
+                <div class="stat-mini-content">
+                  <span class="stat-mini-value">{{ recentMints.length }}</span>
+                  <span class="stat-mini-label">Total Minted</span>
+                </div>
+              </div>
+              
+              <div class="glass-card stat-mini">
+                <div class="stat-mini-icon stat-icon-blue">
+                  <i class="fas fa-university"></i>
+                </div>
+                <div class="stat-mini-content">
+                  <span class="stat-mini-value">3</span>
+                  <span class="stat-mini-label">Institutions</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Recent Mints -->
+            <div class="glass-card recent-mints animate-fade-in">
+              <div class="section-header">
+                <h2>
+                  <i class="fas fa-history"></i>
+                  Recent Mints
+                </h2>
+              </div>
+
+              <div class="mints-list">
+                @for (mint of recentMints; track mint.tokenId) {
+                  <div class="mint-item">
+                    <div class="mint-icon">
+                      <i class="fas fa-gem"></i>
+                    </div>
+                    <div class="mint-details">
+                      <span class="mint-token">Token #{{ mint.tokenId }}</span>
+                      <span class="mint-time">{{ formatDate(mint.timestamp) }}</span>
+                    </div>
+                    <div class="mint-links">
+                      <a href="https://sepolia.etherscan.io/tx/{{ mint.transactionHash }}" 
+                         target="_blank" 
+                         class="mint-link"
+                         title="View on Etherscan">
+                        <i class="fas fa-external-link-alt"></i>
+                      </a>
+                      <a href="https://ipfs.io/ipfs/{{ mint.ipfsHash }}" 
+                         target="_blank" 
+                         class="mint-link"
+                         title="View on IPFS">
+                        <i class="fas fa-cloud"></i>
+                      </a>
+                    </div>
+                  </div>
+                }
+              </div>
+            </div>
+
+            <!-- Quick Actions -->
+            <div class="glass-card quick-actions animate-fade-in">
+              <h3>Quick Actions</h3>
+              <div class="actions-grid">
+                <button class="action-btn">
+                  <i class="fas fa-file-export"></i>
+                  Export Records
+                </button>
+                <button class="action-btn">
+                  <i class="fas fa-cog"></i>
+                  Contract Settings
+                </button>
+                <button class="action-btn">
+                  <i class="fas fa-chart-bar"></i>
+                  View Analytics
+                </button>
+                <button class="action-btn">
+                  <i class="fas fa-user-shield"></i>
+                  Manage Access
+                </button>
+              </div>
+            </div>
+
+          </div>
+          
+        </div>
+        
+      </div>
+    }
+
+  </div>
+</div>

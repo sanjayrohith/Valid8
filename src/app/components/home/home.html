@@ -1,34 +1,205 @@
 <div class="hero-container">
-  <div class="glass-card">
+  
+  <!-- Animated Background -->
+  <div class="bg-gradient"></div>
+  <div class="bg-grid"></div>
+  <div class="floating-shapes">
+    <div class="shape shape-1"></div>
+    <div class="shape shape-2"></div>
+    <div class="shape shape-3"></div>
+  </div>
+
+  <!-- Hero Content -->
+  <div class="hero-content">
     
-    <div style="font-size: 3rem; margin-bottom: 1rem;">
-      🎓
+    <!-- Main Card -->
+    <div class="hero-card glass-card animate-fade-in">
+      
+      <div class="hero-icon animate-float">
+        🎓
+      </div>
+
+      <h1 class="hero-title">
+        <span class="gradient-text">Vali8</span>
+      </h1>
+      
+      <p class="hero-tagline">NFT Certificate Verification Platform</p>
+      
+      <p class="hero-description">
+        Secure. Immutable. Verified.<br>
+        Academic credentials on the blockchain.
+      </p>
+      
+      @if (!walletService.walletAddress) {
+        <div class="cta-section">
+          <p class="cta-text">
+            Verify academic credentials instantly on the blockchain. Connect your wallet to get started.
+          </p>
+          <button class="btn btn-primary btn-lg connect-btn animate-glow" (click)="connect()" [disabled]="isConnecting">
+            @if (isConnecting) {
+              <span class="spinner"></span>
+              Connecting...
+            } @else {
+              <i class="fas fa-wallet"></i>
+              Connect Wallet
+            }
+          </button>
+        </div>
+      } @else {
+        <div class="connected-section">
+          <div class="wallet-badge">
+            <span class="wallet-dot"></span>
+            Connected: {{ truncatedAddress }}
+          </div>
+          
+          <div class="action-buttons">
+            <a routerLink="/dashboard" class="btn btn-primary">
+              <i class="fas fa-graduation-cap"></i>
+              My Certificates
+            </a>
+            <a routerLink="/verify" class="btn btn-secondary">
+              <i class="fas fa-search"></i>
+              Verify
+            </a>
+          </div>
+        </div>
+      }
+
     </div>
 
-    <h1>Diplomint</h1>
-    <p class="subtitle">Secure. Immutable. Verified.</p>
-    
-    @if (!userAddress) {
-      <div>
-        <p style="margin-bottom: 1.5rem; color: #cbd5e1;">
-          Verify academic credentials instantly on the blockchain. Connect your wallet to get started.
-        </p>
-        <button class="connect-btn" (click)="connect()">
-          <i class="fas fa-wallet" style="margin-right: 8px;"></i> Connect Wallet
-        </button>
+    <!-- Feature Cards -->
+    <div class="features-row animate-fade-in delay-2">
+      <div class="feature-mini glass-card glass-card-hover">
+        <div class="feature-mini-icon">
+          <i class="fas fa-shield-alt"></i>
+        </div>
+        <div class="feature-mini-text">
+          <strong>Tamper-Proof</strong>
+          <span>Immutable on Ethereum</span>
+        </div>
       </div>
-    }
-
-    @if (userAddress) {
-      <div>
-        <div class="wallet-badge">
-          Connected: {{ userAddress.substring(0,6) }}...{{ userAddress.substring(38) }}
+      
+      <div class="feature-mini glass-card glass-card-hover">
+        <div class="feature-mini-icon">
+          <i class="fas fa-bolt"></i>
         </div>
-        <p style="margin-top: 2rem; color: #cbd5e1;">
-          Ready to verify certificates.
-        </p>
+        <div class="feature-mini-text">
+          <strong>Instant Verification</strong>
+          <span>Verify in seconds</span>
         </div>
-    }
+      </div>
+      
+      <div class="feature-mini glass-card glass-card-hover">
+        <div class="feature-mini-icon">
+          <i class="fas fa-globe"></i>
+        </div>
+        <div class="feature-mini-text">
+          <strong>Decentralized</strong>
+          <span>No central authority</span>
+        </div>
+      </div>
+    </div>
 
   </div>
+
+  <!-- Scroll Indicator -->
+  <div class="scroll-indicator">
+    <span>Scroll to learn more</span>
+    <i class="fas fa-chevron-down"></i>
+  </div>
+
 </div>
+
+<!-- How It Works Section -->
+<section class="how-it-works">
+  <div class="container">
+    <div class="section-header text-center animate-fade-in">
+      <h2 class="section-title">
+        <span class="gradient-text">How It Works</span>
+      </h2>
+      <p class="section-subtitle">
+        Simple, secure, and transparent certificate verification
+      </p>
+    </div>
+
+    <div class="steps-grid">
+      <div class="step-card glass-card animate-fade-in">
+        <div class="step-number">01</div>
+        <div class="step-icon">
+          <i class="fas fa-university"></i>
+        </div>
+        <h3>University Mints</h3>
+        <p>Educational institutions mint certificates as NFTs on the Ethereum blockchain</p>
+      </div>
+      
+      <div class="step-card glass-card animate-fade-in delay-1">
+        <div class="step-number">02</div>
+        <div class="step-icon">
+          <i class="fas fa-user-graduate"></i>
+        </div>
+        <h3>Student Receives</h3>
+        <p>Graduate receives NFT certificate directly in their crypto wallet</p>
+      </div>
+      
+      <div class="step-card glass-card animate-fade-in delay-2">
+        <div class="step-number">03</div>
+        <div class="step-icon">
+          <i class="fas fa-building"></i>
+        </div>
+        <h3>Employer Verifies</h3>
+        <p>Employers instantly verify credentials by querying the blockchain</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section">
+  <div class="container">
+    <div class="stats-row">
+      <div class="stat-item glass-card animate-fade-in">
+        <div class="stat-value gradient-text">100%</div>
+        <div class="stat-label">Tamper-Proof</div>
+      </div>
+      <div class="stat-item glass-card animate-fade-in delay-1">
+        <div class="stat-value gradient-text">&lt;3s</div>
+        <div class="stat-label">Verification Time</div>
+      </div>
+      <div class="stat-item glass-card animate-fade-in delay-2">
+        <div class="stat-value gradient-text">24/7</div>
+        <div class="stat-label">Availability</div>
+      </div>
+      <div class="stat-item glass-card animate-fade-in delay-3">
+        <div class="stat-value gradient-text">∞</div>
+        <div class="stat-label">Valid Forever</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA Section -->
+<section class="cta-section-bottom">
+  <div class="container">
+    <div class="cta-card glass-card animate-fade-in">
+      <h2>Ready to Get Started?</h2>
+      <p>Join the future of academic credential verification</p>
+      <div class="cta-buttons">
+        @if (!walletService.walletAddress) {
+          <button class="btn btn-primary btn-lg" (click)="connect()">
+            <i class="fas fa-wallet"></i>
+            Connect Wallet
+          </button>
+        } @else {
+          <a routerLink="/verify" class="btn btn-primary btn-lg">
+            <i class="fas fa-search"></i>
+            Verify Certificate
+          </a>
+        }
+        <a routerLink="/admin" class="btn btn-secondary btn-lg">
+          <i class="fas fa-university"></i>
+          For Institutions
+        </a>
+      </div>
+    </div>
+  </div>
+</section>

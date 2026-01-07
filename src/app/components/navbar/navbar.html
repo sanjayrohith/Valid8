@@ -1,0 +1,83 @@
+<nav class="navbar">
+  <div class="navbar-container">
+    <!-- Logo -->
+    <a routerLink="/" class="navbar-brand">
+      <span class="brand-icon">🎓</span>
+      <span class="brand-text">Vali8</span>
+    </a>
+
+    <!-- Desktop Navigation -->
+    <div class="navbar-links">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="nav-link">
+        <i class="fas fa-home"></i>
+        Home
+      </a>
+      <a routerLink="/dashboard" routerLinkActive="active" class="nav-link">
+        <i class="fas fa-graduation-cap"></i>
+        My Certificates
+      </a>
+      <a routerLink="/verify" routerLinkActive="active" class="nav-link">
+        <i class="fas fa-search"></i>
+        Verify
+      </a>
+      <a routerLink="/admin" routerLinkActive="active" class="nav-link">
+        <i class="fas fa-shield-alt"></i>
+        Admin
+      </a>
+    </div>
+
+    <!-- Wallet Connection -->
+    <div class="navbar-actions">
+      @if (walletService.walletAddress) {
+        <div class="wallet-connected">
+          <span class="wallet-indicator"></span>
+          <span class="wallet-address">{{ truncatedAddress }}</span>
+        </div>
+      } @else {
+        <button class="connect-wallet-btn" (click)="connectWallet()">
+          <i class="fas fa-wallet"></i>
+          Connect Wallet
+        </button>
+      }
+    </div>
+
+    <!-- Mobile Menu Toggle -->
+    <button class="mobile-menu-btn" (click)="toggleMenu()">
+      <i class="fas" [class.fa-bars]="!isMenuOpen" [class.fa-times]="isMenuOpen"></i>
+    </button>
+  </div>
+
+  <!-- Mobile Navigation -->
+  @if (isMenuOpen) {
+    <div class="mobile-menu">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}" class="mobile-link" (click)="toggleMenu()">
+        <i class="fas fa-home"></i>
+        Home
+      </a>
+      <a routerLink="/dashboard" routerLinkActive="active" class="mobile-link" (click)="toggleMenu()">
+        <i class="fas fa-graduation-cap"></i>
+        My Certificates
+      </a>
+      <a routerLink="/verify" routerLinkActive="active" class="mobile-link" (click)="toggleMenu()">
+        <i class="fas fa-search"></i>
+        Verify
+      </a>
+      <a routerLink="/admin" routerLinkActive="active" class="mobile-link" (click)="toggleMenu()">
+        <i class="fas fa-shield-alt"></i>
+        Admin
+      </a>
+      
+      @if (!walletService.walletAddress) {
+        <button class="mobile-connect-btn" (click)="connectWallet(); toggleMenu()">
+          <i class="fas fa-wallet"></i>
+          Connect Wallet
+        </button>
+      } @else {
+        <div class="mobile-wallet">
+          <span class="wallet-indicator"></span>
+          {{ truncatedAddress }}
+        </div>
+      }
+    </div>
+  }
+</nav>

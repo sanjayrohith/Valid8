@@ -1,23 +1,25 @@
 import { Component } from '@angular/core';
-import { RouterLink } from '@angular/router';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { WalletService } from '../../service/wallet';
 
 @Component({
-  selector: 'app-home',
+  selector: 'app-navbar',
   standalone: true,
-  imports: [RouterLink],
-  templateUrl: './home.html',
-  styleUrls: ['./home.css']
+  imports: [RouterLink, RouterLinkActive],
+  templateUrl: './navbar.html',
+  styleUrls: ['./navbar.css']
 })
-export class HomeComponent {
-  isConnecting = false;
+export class NavbarComponent {
+  isMenuOpen = false;
 
   constructor(public walletService: WalletService) {}
 
-  async connect() {
-    this.isConnecting = true;
+  async connectWallet() {
     await this.walletService.connectWallet();
-    this.isConnecting = false;
+  }
+
+  toggleMenu() {
+    this.isMenuOpen = !this.isMenuOpen;
   }
 
   get truncatedAddress(): string {
