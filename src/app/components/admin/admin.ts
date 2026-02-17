@@ -1,194 +1,177 @@
 import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { WalletService } from '../../service/wallet';
-
-interface MintForm {
-  studentName: string;
-  studentWallet: string;
-  degree: string;
-  institution: string;
-  dateIssued: string;
-  certificateImage: File | null;
-}
 
 interface MintedCertificate {
   tokenId: string;
+  studentName: string;
+  degree: string;
+  institution: string;
+  dateIssued: string;
   transactionHash: string;
-  ipfsHash: string;
-  timestamp: Date;
 }
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [FormsModule],
+  imports: [FormsModule, RouterLink],
   templateUrl: './admin.html',
   styleUrls: ['./admin.css']
 })
 export class AdminComponent {
-  isAdmin = false;
-  isConnected = false;
-  isLoading = false;
+  // Wallet
+  isOwner = true;
+
+  // Form fields
+  studentName = '';
+  studentWallet = '';
+  degree = '';
+  institution = '';
+  dateIssued = '';
+
+  // Upload
+  imagePreview: string | null = null;
+  isDragActive = false;
+
+  // Minting
   isMinting = false;
   mintSuccess = false;
   mintError = '';
-  
-  // Contract owner address (for demo - in production this comes from contract)
-  readonly contractOwner = '0x742d35Cc6634C0532925a3b844Bc9e7595f8bE2C';
+  mintStep = 1;
+  mintingStatus = 'Preparing...';
 
-  form: MintForm = {
-    studentName: '',
-    studentWallet: '',
-    degree: '',
-    institution: '',
-    dateIssued: '',
-    certificateImage: null
-  };
-
-  imagePreview: string | null = null;
-  
+  // Recent Mints
   recentMints: MintedCertificate[] = [
     {
       tokenId: '3',
-      transactionHash: '0x9e8f7d3c2b1a9e8f7d3c2b1a9e8f7d3c2b1a9e8f7d3c2b1a9e8f7d3c2b1a9e8f',
-      ipfsHash: 'QmW2WQi7j6c7UgJTarActp7tDNikE4B2qXtFCfLPdsgaTQ',
-      timestamp: new Date('2025-01-10')
+      studentName: 'James Chen',
+      degree: 'PhD in Artificial Intelligence',
+      institution: 'Carnegie Mellon University',
+      dateIssued: '2025-01-10',
+      transactionHash: '0x9e8f7d3c...1a9e8f7d'
     },
     {
       tokenId: '2',
-      transactionHash: '0x2b1a9e8f7d3c2b1a9e8f7d3c2b1a9e8f7d3c2b1a9e8f7d3c2b1a9e8f7d3c2b1a',
-      ipfsHash: 'QmZTR5bcpQD7cFgTorqxZDYaew1Wqgfbd2ud9QqGPAkK2V',
-      timestamp: new Date('2024-12-20')
-    },
-    {
-      tokenId: '1',
-      transactionHash: '0x8f7d3c2b1a9e8f7d3c2b1a9e8f7d3c2b1a9e8f7d3c2b1a9e8f7d3c2b1a9e8f7d',
-      ipfsHash: 'QmYwAPJzv5CZsnA625s3Xf2nemtYgPpHdWEz79ojWnPbdG',
-      timestamp: new Date('2024-05-15')
+      studentName: 'Maria Garcia',
+      degree: 'MBA',
+      institution: 'Stanford Business School',
+      dateIssued: '2024-12-20',
+      transactionHash: '0x2b1a9e8f...7d3c2b1a'
     }
   ];
 
-  constructor(public walletService: WalletService) {}
+  constructor(public walletService: WalletService) { }
 
   async connectWallet() {
-    this.isLoading = true;
-    const address = await this.walletService.connectWallet();
-    if (address) {
-      this.isConnected = true;
-      this.checkAdmin();
-    }
-    this.isLoading = false;
-  }
-
-  checkAdmin() {
-    // In production, this would check if connected wallet is the contract owner
-    // For demo, we'll allow any connected wallet to access admin features
-    this.isAdmin = true;
-  }
-
-  onFileSelected(event: Event) {
-    const input = event.target as HTMLInputElement;
-    if (input.files && input.files[0]) {
-      this.form.certificateImage = input.files[0];
-      
-      // Create preview
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        this.imagePreview = e.target?.result as string;
-      };
-      reader.readAsDataURL(input.files[0]);
-    }
-  }
-
-  removeImage() {
-    this.form.certificateImage = null;
-    this.imagePreview = null;
+    await this.walletService.connectWallet();
   }
 
   isFormValid(): boolean {
-    return !!(
-      this.form.studentName.trim() &&
-      this.form.studentWallet.trim() &&
-      this.form.degree.trim() &&
-      this.form.institution.trim() &&
-      this.form.dateIssued &&
-      this.isValidAddress(this.form.studentWallet)
-    );
-  }
-
-  isValidAddress(address: string): boolean {
-    return /^0x[a-fA-F0-9]{40}$/.test(address);
+    return !!(this.studentName.trim() && this.studentWallet.trim() &&
+      this.degree.trim() && this.institution.trim() && this.dateIssued);
   }
 
   async mintCertificate() {
-    if (!this.isFormValid()) {
-      this.mintError = 'Please fill in all required fields correctly';
-      return;
-    }
+    if (!this.isFormValid()) return;
 
     this.isMinting = true;
-    this.mintError = '';
     this.mintSuccess = false;
+    this.mintError = '';
+    this.mintStep = 1;
 
     try {
-      // Simulate minting process
-      // Step 1: Upload image to IPFS (simulated)
-      await new Promise(resolve => setTimeout(resolve, 1500));
-      
-      // Step 2: Upload metadata to IPFS (simulated)
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
-      // Step 3: Mint NFT on blockchain (simulated)
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Step 1: Prepare
+      this.mintingStatus = 'Preparing metadata...';
+      await this.delay(800);
+      this.mintStep = 2;
 
-      // Add to recent mints
+      // Step 2: Upload to IPFS
+      this.mintingStatus = 'Uploading to IPFS...';
+      await this.delay(1200);
+      this.mintStep = 3;
+
+      // Step 3: Mint on blockchain
+      this.mintingStatus = 'Minting on blockchain...';
+      await this.delay(1500);
+
+      // Generate mock data
+      const newTokenId = (this.recentMints.length + 1).toString();
       const newMint: MintedCertificate = {
-        tokenId: (this.recentMints.length + 1).toString(),
-        transactionHash: '0x' + Math.random().toString(16).slice(2) + Math.random().toString(16).slice(2),
-        ipfsHash: 'Qm' + Math.random().toString(36).slice(2, 15) + Math.random().toString(36).slice(2, 15),
-        timestamp: new Date()
+        tokenId: newTokenId,
+        studentName: this.studentName,
+        degree: this.degree,
+        institution: this.institution,
+        dateIssued: this.dateIssued,
+        transactionHash: `0x${this.randomHex(16)}...${this.randomHex(8)}`
       };
-      
+
       this.recentMints.unshift(newMint);
       this.mintSuccess = true;
       this.resetForm();
-
     } catch (error) {
       this.mintError = 'Failed to mint certificate. Please try again.';
+    } finally {
+      this.isMinting = false;
     }
+  }
 
-    this.isMinting = false;
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
+  private randomHex(length: number): string {
+    return Array.from({ length }, () => Math.floor(Math.random() * 16).toString(16)).join('');
   }
 
   resetForm() {
-    this.form = {
-      studentName: '',
-      studentWallet: '',
-      degree: '',
-      institution: '',
-      dateIssued: '',
-      certificateImage: null
-    };
+    this.studentName = '';
+    this.studentWallet = '';
+    this.degree = '';
+    this.institution = '';
+    this.dateIssued = '';
     this.imagePreview = null;
+    this.mintStep = 1;
   }
 
-  get truncatedAddress(): string {
-    const addr = this.walletService.walletAddress;
-    if (!addr) return '';
-    return `${addr.substring(0, 6)}...${addr.substring(38)}`;
+  // File Upload Handling
+  onDragOver(event: DragEvent) {
+    event.preventDefault();
+    this.isDragActive = true;
   }
 
-  formatDate(date: Date): string {
-    return date.toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
-    });
+  onDragLeave(event: DragEvent) {
+    event.preventDefault();
+    this.isDragActive = false;
   }
 
-  truncateHash(hash: string): string {
-    return `${hash.substring(0, 10)}...${hash.substring(hash.length - 8)}`;
+  onDrop(event: DragEvent) {
+    event.preventDefault();
+    this.isDragActive = false;
+    const file = event.dataTransfer?.files[0];
+    if (file && file.type.startsWith('image/')) {
+      this.readFile(file);
+    }
+  }
+
+  onFileSelect(event: Event) {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    if (file) {
+      this.readFile(file);
+    }
+  }
+
+  private readFile(file: File) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      this.imagePreview = reader.result as string;
+    };
+    reader.readAsDataURL(file);
+  }
+
+  removeImage(event: Event) {
+    event.stopPropagation();
+    this.imagePreview = null;
   }
 }

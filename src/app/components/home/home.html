@@ -1,75 +1,104 @@
 <div class="hero-container">
-  
-  <!-- Animated Background -->
-  <div class="bg-gradient"></div>
-  <div class="bg-grid"></div>
-  <div class="floating-shapes">
-    <div class="shape shape-1"></div>
-    <div class="shape shape-2"></div>
-    <div class="shape shape-3"></div>
+
+  <!-- Particle Canvas Background -->
+  <canvas #particleCanvas class="particle-canvas"></canvas>
+
+  <!-- Animated Gradient Blobs -->
+  <div class="bg-blobs">
+    <div class="blob blob-1"></div>
+    <div class="blob blob-2"></div>
+    <div class="blob blob-3"></div>
   </div>
+
+  <!-- Grid Overlay -->
+  <div class="bg-grid"></div>
 
   <!-- Hero Content -->
   <div class="hero-content">
-    
+
     <!-- Main Card -->
-    <div class="hero-card glass-card animate-fade-in">
-      
-      <div class="hero-icon animate-float">
-        🎓
+    <div class="hero-card glass-card holo-card animate-fade-in" (mousemove)="onMouseMove($event)"
+      (mouseleave)="onMouseLeave()" [style.transform]="cardTransform">
+
+      <!-- Orbital Animation -->
+      <div class="orbital-container">
+        <div class="orbital-ring ring-1">
+          <div class="orbital-dot"></div>
+        </div>
+        <div class="orbital-ring ring-2">
+          <div class="orbital-dot dot-2"></div>
+        </div>
+        <div class="hero-icon-inner">
+          <svg viewBox="0 0 60 60" class="hero-shield" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+              <linearGradient id="shieldGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                <stop offset="0%" style="stop-color:#4ade80" />
+                <stop offset="50%" style="stop-color:#22d3ee" />
+                <stop offset="100%" style="stop-color:#3b82f6" />
+              </linearGradient>
+            </defs>
+            <polygon points="30,4 55,16 55,36 30,56 5,36 5,16" fill="none" stroke="url(#shieldGrad)"
+              stroke-width="2.5" />
+            <polygon points="30,12 47,20 47,34 30,48 13,34 13,20" fill="rgba(74, 222, 128, 0.08)"
+              stroke="url(#shieldGrad)" stroke-width="1" />
+            <text x="30" y="36" text-anchor="middle" fill="url(#shieldGrad)" font-size="18" font-weight="700"
+              font-family="Space Grotesk, sans-serif">V8</text>
+          </svg>
+        </div>
       </div>
 
       <h1 class="hero-title">
         <span class="gradient-text">Vali8</span>
       </h1>
-      
+
       <p class="hero-tagline">NFT Certificate Verification Platform</p>
-      
+
       <p class="hero-description">
-        Secure. Immutable. Verified.<br>
-        Academic credentials on the blockchain.
+        <span class="typed-text">{{ displayText }}</span>
+        <span class="typing-cursor">|</span>
       </p>
-      
+
       @if (!walletService.walletAddress) {
-        <div class="cta-section">
-          <p class="cta-text">
-            Verify academic credentials instantly on the blockchain. Connect your wallet to get started.
-          </p>
-          <button class="btn btn-primary btn-lg connect-btn animate-glow" (click)="connect()" [disabled]="isConnecting">
-            @if (isConnecting) {
-              <span class="spinner"></span>
-              Connecting...
-            } @else {
-              <i class="fas fa-wallet"></i>
-              Connect Wallet
-            }
-          </button>
-        </div>
+      <div class="cta-section">
+        <button class="btn btn-primary btn-lg connect-btn" (click)="connect()" [disabled]="isConnecting">
+          @if (isConnecting) {
+          <span class="spinner"></span>
+          Connecting...
+          } @else {
+          <i class="fas fa-wallet"></i>
+          Connect Wallet
+          }
+        </button>
+        <p class="cta-hint">
+          <i class="fas fa-lock"></i>
+          Secure blockchain authentication
+        </p>
+      </div>
       } @else {
-        <div class="connected-section">
-          <div class="wallet-badge">
-            <span class="wallet-dot"></span>
-            Connected: {{ truncatedAddress }}
-          </div>
-          
-          <div class="action-buttons">
-            <a routerLink="/dashboard" class="btn btn-primary">
-              <i class="fas fa-graduation-cap"></i>
-              My Certificates
-            </a>
-            <a routerLink="/verify" class="btn btn-secondary">
-              <i class="fas fa-search"></i>
-              Verify
-            </a>
-          </div>
+      <div class="connected-section">
+        <div class="wallet-badge">
+          <span class="wallet-dot"></span>
+          Connected: {{ truncatedAddress }}
         </div>
+
+        <div class="action-buttons">
+          <a routerLink="/dashboard" class="btn btn-primary">
+            <i class="fas fa-graduation-cap"></i>
+            My Certificates
+          </a>
+          <a routerLink="/verify" class="btn btn-secondary">
+            <i class="fas fa-search"></i>
+            Verify
+          </a>
+        </div>
+      </div>
       }
 
     </div>
 
     <!-- Feature Cards -->
     <div class="features-row animate-fade-in delay-2">
-      <div class="feature-mini glass-card glass-card-hover">
+      <div class="feature-mini glass-card holo-card glass-card-hover">
         <div class="feature-mini-icon">
           <i class="fas fa-shield-alt"></i>
         </div>
@@ -78,8 +107,8 @@
           <span>Immutable on Ethereum</span>
         </div>
       </div>
-      
-      <div class="feature-mini glass-card glass-card-hover">
+
+      <div class="feature-mini glass-card holo-card glass-card-hover">
         <div class="feature-mini-icon">
           <i class="fas fa-bolt"></i>
         </div>
@@ -88,8 +117,8 @@
           <span>Verify in seconds</span>
         </div>
       </div>
-      
-      <div class="feature-mini glass-card glass-card-hover">
+
+      <div class="feature-mini glass-card holo-card glass-card-hover">
         <div class="feature-mini-icon">
           <i class="fas fa-globe"></i>
         </div>
@@ -104,8 +133,10 @@
 
   <!-- Scroll Indicator -->
   <div class="scroll-indicator">
-    <span>Scroll to learn more</span>
-    <i class="fas fa-chevron-down"></i>
+    <span>Explore</span>
+    <div class="scroll-arrow">
+      <i class="fas fa-chevron-down"></i>
+    </div>
   </div>
 
 </div>
@@ -114,8 +145,9 @@
 <section class="how-it-works">
   <div class="container">
     <div class="section-header text-center animate-fade-in">
+      <span class="section-label">How It Works</span>
       <h2 class="section-title">
-        <span class="gradient-text">How It Works</span>
+        <span class="gradient-text">Three Simple Steps</span>
       </h2>
       <p class="section-subtitle">
         Simple, secure, and transparent certificate verification
@@ -123,7 +155,7 @@
     </div>
 
     <div class="steps-grid">
-      <div class="step-card glass-card animate-fade-in">
+      <div class="step-card glass-card holo-card animate-fade-in">
         <div class="step-number">01</div>
         <div class="step-icon">
           <i class="fas fa-university"></i>
@@ -131,8 +163,13 @@
         <h3>University Mints</h3>
         <p>Educational institutions mint certificates as NFTs on the Ethereum blockchain</p>
       </div>
-      
-      <div class="step-card glass-card animate-fade-in delay-1">
+
+      <div class="step-connector">
+        <div class="connector-line"></div>
+        <div class="connector-dot"></div>
+      </div>
+
+      <div class="step-card glass-card holo-card animate-fade-in delay-1">
         <div class="step-number">02</div>
         <div class="step-icon">
           <i class="fas fa-user-graduate"></i>
@@ -140,8 +177,13 @@
         <h3>Student Receives</h3>
         <p>Graduate receives NFT certificate directly in their crypto wallet</p>
       </div>
-      
-      <div class="step-card glass-card animate-fade-in delay-2">
+
+      <div class="step-connector">
+        <div class="connector-line"></div>
+        <div class="connector-dot"></div>
+      </div>
+
+      <div class="step-card glass-card holo-card animate-fade-in delay-2">
         <div class="step-number">03</div>
         <div class="step-icon">
           <i class="fas fa-building"></i>
@@ -157,19 +199,19 @@
 <section class="stats-section">
   <div class="container">
     <div class="stats-row">
-      <div class="stat-item glass-card animate-fade-in">
+      <div class="stat-item glass-card holo-card animate-fade-in">
         <div class="stat-value gradient-text">100%</div>
         <div class="stat-label">Tamper-Proof</div>
       </div>
-      <div class="stat-item glass-card animate-fade-in delay-1">
+      <div class="stat-item glass-card holo-card animate-fade-in delay-1">
         <div class="stat-value gradient-text">&lt;3s</div>
         <div class="stat-label">Verification Time</div>
       </div>
-      <div class="stat-item glass-card animate-fade-in delay-2">
+      <div class="stat-item glass-card holo-card animate-fade-in delay-2">
         <div class="stat-value gradient-text">24/7</div>
         <div class="stat-label">Availability</div>
       </div>
-      <div class="stat-item glass-card animate-fade-in delay-3">
+      <div class="stat-item glass-card holo-card animate-fade-in delay-3">
         <div class="stat-value gradient-text">∞</div>
         <div class="stat-label">Valid Forever</div>
       </div>
@@ -180,20 +222,21 @@
 <!-- CTA Section -->
 <section class="cta-section-bottom">
   <div class="container">
-    <div class="cta-card glass-card animate-fade-in">
-      <h2>Ready to Get Started?</h2>
+    <div class="cta-card glass-card holo-card animate-fade-in">
+      <span class="section-label">Get Started</span>
+      <h2>Ready to Verify?</h2>
       <p>Join the future of academic credential verification</p>
       <div class="cta-buttons">
         @if (!walletService.walletAddress) {
-          <button class="btn btn-primary btn-lg" (click)="connect()">
-            <i class="fas fa-wallet"></i>
-            Connect Wallet
-          </button>
+        <button class="btn btn-primary btn-lg" (click)="connect()">
+          <i class="fas fa-wallet"></i>
+          Connect Wallet
+        </button>
         } @else {
-          <a routerLink="/verify" class="btn btn-primary btn-lg">
-            <i class="fas fa-search"></i>
-            Verify Certificate
-          </a>
+        <a routerLink="/verify" class="btn btn-primary btn-lg">
+          <i class="fas fa-search"></i>
+          Verify Certificate
+        </a>
         }
         <a routerLink="/admin" class="btn btn-secondary btn-lg">
           <i class="fas fa-university"></i>

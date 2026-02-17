@@ -29,6 +29,7 @@ export class VerifyComponent {
   hasSearched = false;
   verificationResult: VerificationResult | null = null;
   errorMessage = '';
+  searchProgress = 0;
 
   // Demo data for showcase
   demoResults: Record<string, VerificationResult> = {
@@ -70,7 +71,7 @@ export class VerifyComponent {
     }
   };
 
-  constructor(public walletService: WalletService) {}
+  constructor(public walletService: WalletService) { }
 
   async search() {
     if (!this.searchQuery.trim()) {
@@ -82,15 +83,20 @@ export class VerifyComponent {
     this.hasSearched = false;
     this.verificationResult = null;
     this.errorMessage = '';
+    this.searchProgress = 0;
 
-    // Simulate blockchain query
-    await new Promise(resolve => setTimeout(resolve, 2000));
+    // Animated progress steps
+    await this.delay(600);
+    this.searchProgress = 1;
+    await this.delay(700);
+    this.searchProgress = 2;
+    await this.delay(700);
+    this.searchProgress = 3;
 
     // Check demo data
     if (this.searchType === 'tokenId') {
       this.verificationResult = this.demoResults[this.searchQuery] || null;
     } else {
-      // Search by wallet address - find first matching certificate
       const result = Object.values(this.demoResults).find(
         r => r.ownerAddress.toLowerCase() === this.searchQuery.toLowerCase()
       );
@@ -98,8 +104,8 @@ export class VerifyComponent {
     }
 
     if (!this.verificationResult) {
-      this.errorMessage = this.searchType === 'tokenId' 
-        ? 'No certificate found with this Token ID' 
+      this.errorMessage = this.searchType === 'tokenId'
+        ? 'No certificate found with this Token ID'
         : 'No certificates found for this wallet address';
     }
 
@@ -107,11 +113,16 @@ export class VerifyComponent {
     this.hasSearched = true;
   }
 
+  private delay(ms: number): Promise<void> {
+    return new Promise(resolve => setTimeout(resolve, ms));
+  }
+
   clearSearch() {
     this.searchQuery = '';
     this.hasSearched = false;
     this.verificationResult = null;
     this.errorMessage = '';
+    this.searchProgress = 0;
   }
 
   formatDate(dateStr: string): string {
@@ -132,6 +143,5 @@ export class VerifyComponent {
 
   copyToClipboard(text: string) {
     navigator.clipboard.writeText(text);
-    // Could add toast notification here
   }
 }

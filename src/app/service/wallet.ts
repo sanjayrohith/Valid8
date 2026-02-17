@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { BrowserProvider } from 'ethers';
-
+import { Contract } from 'ethers';
+import { CONTRACT_ADDRESS, CONTRACT_ABI } from '../constants/contract.constant';
 @Injectable({
   providedIn: 'root'
 })

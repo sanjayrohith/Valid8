@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { WalletService } from '../../service/wallet';
 
@@ -11,8 +11,14 @@ import { WalletService } from '../../service/wallet';
 })
 export class NavbarComponent {
   isMenuOpen = false;
+  isScrolled = false;
 
   constructor(public walletService: WalletService) {}
+
+  @HostListener('window:scroll')
+  onWindowScroll() {
+    this.isScrolled = window.scrollY > 30;
+  }
 
   async connectWallet() {
     await this.walletService.connectWallet();
