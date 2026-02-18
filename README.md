@@ -1,59 +1,78 @@
-# CertVerifier
+# 🛡️ Vali8 - Blockchain Credential Verification
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.0.4.
+> **Next-Generation NFT Certificate Verification Platform**
 
-## Development server
+Vali8 is a cutting-edge decentralized application (dApp) designed to revolutionize academic credential verification. Built on Ethereum, it provides a tamper-proof, instant, and transparent way to issue and verify certificates as NFTs.
 
-To start a local development server, run:
+Experience the future of digital credentials with a premium "Cyber-Finance" interface featuring holographic effects, particle networks, and seamless blockchain integration.
 
-```bash
-ng serve
-```
+![Home Page](docs/assets/home.png)
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## ✨ Key Features
 
-## Code scaffolding
+### 🌐 Immersive Experience
+- **Particle Network Canvas**: Interactive background visualizing decentralized connections.
+- **3D Tilt Cards**: Hero elements respond to mouse movement for depth perception.
+- **Typing Animation**: Dynamic text presentation that engages users immediately.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+### ⚡ Powerful Functionality
+- **Instant Verification**: Query the blockchain in milliseconds to validate any certificate.
+- **Secure Dashboard**: Connect your MetaMask wallet to view your personal certificate portfolio.
+- **Admin Console**: dedicated portal for institutions to mint new credentials with a 3-step wizard.
 
-```bash
-ng generate component component-name
-```
+### 🎨 Premium Design System
+- **Glassmorphism**: Modern, frosted-glass UI with sophisticated blur effects.
+- **Holographic Shimmer**: Interactive hover states that feel alive.
+- **Neon Glows**: vibrant accent colors for a futuristic aesthetic.
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
+## 📸 App Gallery
 
-```bash
-ng generate --help
-```
+| **Verification Portal** | **User Dashboard** |
+|:---:|:---:|
+| ![Verify](docs/assets/verify.png) | ![Dashboard](docs/assets/dashboard.png) |
+| **Clean, toggle-based search interface** | **Personalized view of your NFT credentials** |
 
-## Building
+| **Admin Console** | **Minting Wizard** |
+|:---:|:---:|
+| ![Admin](docs/assets/admin.png) | *Streamlined 3-step minting process* |
+| **Secure access for authorized issuers** | **Drag & drop upload with preview** |
 
-To build the project run:
+## 🚀 Tech Stack
 
-```bash
-ng build
-```
+- **Framework**: [Angular 17+](https://angular.io/) (Standalone Components)
+- **Blockchain**: [Ethers.js](https://docs.ethers.org/) for Ethereum interaction
+- **Styling**: Native CSS Variables, Flexbox/Grid, Custom Keyframe Animations
+- **Fonts**: Space Grotesk (Headings), Inter & JetBrains Mono (Body/Code)
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+## 🛠️ Getting Started
 
-## Running unit tests
+Follow these steps to set up the project locally:
 
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
+1.  **Clone the repository**
+    ```bash
+    git clone https://github.com/yourusername/vali8.git
+    cd vali8
+    ```
 
-```bash
-ng test
-```
+2.  **Install dependencies**
+    ```bash
+    npm install
+    ```
 
-## Running end-to-end tests
+3.  **Start the development server**
+    ```bash
+    ng serve
+    ```
 
-For end-to-end (e2e) testing, run:
+4.  **Open your browser**
+    Navigate to `http://localhost:4200/` to see the application running.
 
-```bash
-ng e2e
-```
+## 🤝 Contributing
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+Contributions are welcome! Please run `ng test` to ensure all tests pass before submitting a pull request.
 
-## Additional Resources
+---
 
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+<p align="center">
+  Built with ❤️ by Vali8 Team
+</p>
